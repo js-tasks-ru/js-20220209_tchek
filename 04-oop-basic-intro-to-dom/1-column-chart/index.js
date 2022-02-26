@@ -58,7 +58,7 @@ export default class ColumnChart {
     let result = '';
     for (const item of this.data) {
       result += `<div style="--value: ${Math.floor(item * multiplier)}"
-                      data-tooltip="${Math.floor(item * 100/ sum)}%">
+                      data-tooltip="${(item * 100 / maxValue).toFixed(0) + '%'}">
                  </div>`;
     }
 
