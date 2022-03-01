@@ -31,8 +31,15 @@ export default class SortableTable {
   }
 
   handleClick(event) {
-    const columnName = event.currentTarget.textContent;
-    const column = this.headerConfig.filter(column => column.title === columnName)[0];
+    const columnHeader = event.target.closest('div.sortable-table__cell');
+    if (!columnHeader) {
+      return;
+    }
+
+    const column = this.headerConfig.filter(column => column.id === columnHeader.dataset.id)[0];
+    if (!column.sortable) {
+      return;
+    }
 
     if (column.order) {
       this.sort(column.id, this.inverse[column.order]);
@@ -43,12 +50,7 @@ export default class SortableTable {
   }
 
   initEventListener() {
-    const headers = this.subElements.header
-      .querySelectorAll('.sortable-table__cell[data-sortable="true"] > span:not(.sortable-table__sort-arrow)');
-
-    for (const header of headers) {
-      header.addEventListener('click', this.handleClick);
-    }
+    this.subElements.header.addEventListener('click', this.handleClick);
   }
 
   getHeader() {
@@ -129,13 +131,7 @@ export default class SortableTable {
   }
 
   destroy() {
-
-    const headers = this.subElements.header
-      .querySelectorAll('.sortable-table__cell[data-sortable="true"] > span:not(.sortable-table__sort-arrow)');
-
-    for (const header of headers) {
-      header.removeEventListener('click', this.handleClick);
-    }
+    this.subElements.header.removeEventListener('click', this.handleClick);
     this.remove();
     this.element = null;
   }
