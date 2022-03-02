@@ -6,9 +6,6 @@ class Tooltip {
     }
 
     Tooltip._component = this;
-
-    this.pointerOver = this.pointerOver.bind(this);
-    this.pointerOut = this.pointerOut.bind(this);
   }
 
   initialize() {
@@ -16,17 +13,26 @@ class Tooltip {
     document.addEventListener('pointerout', this.pointerOut);
   }
 
-  pointerOver(event) {
+  pointerOver = (event) => {
     const toolTip = event.target.dataset.tooltip;
     if (!toolTip) {
       return;
     }
 
     this.render(toolTip);
+    this.element.toolTipElement = event.target.closest('div[data-tooltip]');
+    this.element.toolTipElement.addEventListener('mousemove', this.mouseMove);
   }
 
-  pointerOut(event) {
+  mouseMove = (e) => {
+    const { clientX: x, clientY: y } = e;
+    this.element.style.top = (y + 20) + 'px';
+    this.element.style.left = (x + 20) + 'px';
+  }
+
+  pointerOut = (event) => {
     if (this.element) {
+      this.element.toolTipElement.removeEventListener('mousemove', this.mouseMove);
       this.element.remove();
     }
     this.element = null;
@@ -35,6 +41,9 @@ class Tooltip {
   destroy() {
     document.removeEventListener('pointerover', this.pointerOver);
     document.removeEventListener('pointerover', this.pointerOut);
+    if (this.element) {
+      this.element.removeEventListener('mousemove', this.mouseMove);
+    }
     this.element = null;
     Tooltip._component = null;
   }
