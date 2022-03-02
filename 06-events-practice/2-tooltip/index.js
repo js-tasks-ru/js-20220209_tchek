@@ -42,7 +42,7 @@ class Tooltip {
     document.removeEventListener('pointerover', this.pointerOver);
     document.removeEventListener('pointerover', this.pointerOut);
     if (this.element) {
-      this.element.removeEventListener('mousemove', this.mouseMove);
+      this.element.toolTipElement.removeEventListener('mousemove', this.mouseMove);
     }
     this.element = null;
     Tooltip._component = null;
