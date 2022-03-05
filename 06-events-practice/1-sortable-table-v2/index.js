@@ -3,8 +3,16 @@ export default class SortableTable {
     data = [],
     sorted = {}
   } = {}) {
+
     this.headerConfig = headersConfig;
     this.data = data;
+    if (!sorted.id) {
+      const column = this.headerConfig.filter(column => column.sortable)[0];
+      sorted.id = column.id;
+    }
+    if (!sorted.order) {
+      sorted.order = 'asc';
+    }
 
     for (const columnConfig of this.headerConfig) {
       if (!columnConfig.template) {
