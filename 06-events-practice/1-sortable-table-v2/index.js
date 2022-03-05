@@ -137,6 +137,10 @@ export default class SortableTable {
   }
 
   sort(field, order) {
+    if (!order) {
+      return;
+    }
+
     this.headerConfig.map(column => {
       column.order = null;
       column.element.dataset.order = '';
