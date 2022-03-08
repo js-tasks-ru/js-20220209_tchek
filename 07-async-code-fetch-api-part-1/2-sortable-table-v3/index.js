@@ -166,7 +166,7 @@ export default class SortableTable {
     `;
   }
 
-  render() {
+  async render() {
     const element = document.createElement('div');
     element.innerHTML = this.getTemplate();
 
@@ -176,7 +176,7 @@ export default class SortableTable {
 
     this.element = element.firstElementChild;
 
-    this.sort(this.sorted.id, this.sorted.order);
+    await this.sort(this.sorted.id, this.sorted.order);
   }
 
   remove() {
@@ -191,7 +191,7 @@ export default class SortableTable {
     this.element = null;
   }
 
-  sort(field, order) {
+  async sort(field, order) {
     if (!order) {
       return;
     }
@@ -208,7 +208,7 @@ export default class SortableTable {
     if (this.isSortLocally) {
       this.sortOnClient(field, order);
     } else {
-      this.sortOnServer(field, order);
+      await this.sortOnServer(field, order);
     }
   }
 
@@ -223,8 +223,7 @@ export default class SortableTable {
     this.url.searchParams.set('_embed', this.embed);
     this.url.searchParams.set('_start', start);
     this.url.searchParams.set('_end', end);
-    const response = await fetch(this.url);
-    return await response.json();
+    return await fetchJson(this.url);
   }
 
   sortOnClient(field, order) {
