@@ -29,6 +29,8 @@ export default class SortableTable {
       sorted.order = 'asc';
     }
 
+    this.sorted = sorted;
+
     for (const columnConfig of this.headerConfig) {
       if (!columnConfig.template) {
         columnConfig.template = (value) => {
@@ -41,10 +43,6 @@ export default class SortableTable {
     this.subElements = this.getSubElements();
 
     this.initEventListener();
-
-    if (sorted) {
-      this.sort(sorted.id, sorted.order);
-    }
   }
 
   inverse = {
@@ -177,6 +175,8 @@ export default class SortableTable {
     }
 
     this.element = element.firstElementChild;
+
+    this.sort(this.sorted.id, this.sorted.order);
   }
 
   remove() {
