@@ -200,7 +200,8 @@ export default class SortableTable {
   }
 
   destroy() {
-    this.subElements.header.removeEventListener('click', this.handleClick);
+    this.subElements.header.removeEventListener('pointerdown', this.handleClick);
+    window.removeEventListener('scroll', this.handleScroll);
     this.remove();
     this.element = null;
   }
