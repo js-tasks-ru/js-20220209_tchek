@@ -13,7 +13,9 @@ export default class SortableTable {
     isSortLocally = false,
     embed = '',
     data = [],
-    sorted = {}
+    sorted = {
+      order: 'asc'
+    }
   } = {}) {
 
     this.url = new URL(url, BACKEND_URL);
@@ -22,11 +24,8 @@ export default class SortableTable {
     this.headerConfig = headersConfig;
     this.data = data;
     if (!sorted.id) {
-      const column = this.headerConfig.filter(column => column.sortable)[0];
+      const column = this.headerConfig.find(column => column.sortable);
       sorted.id = column.id;
-    }
-    if (!sorted.order) {
-      sorted.order = 'asc';
     }
 
     this.sorted = sorted;
@@ -45,6 +44,25 @@ export default class SortableTable {
     this.initEventListener();
   }
 
+  setArrowAndSortOrder(column) {
+
+    let order = 'asc';
+    if (column.order) {
+      order = this.inverse[column.order]
+    }
+
+    this.headerConfig.map(column => {
+      column.order = null;
+      column.element.dataset.order = '';
+    });
+
+    column.order = order;
+    column.element.dataset.order = order;
+
+    this.sorted.id = column.id;
+    this.sorted.order = order;
+  }
+
   inverse = {
     'asc': 'desc',
     'desc': 'asc'
@@ -61,16 +79,12 @@ export default class SortableTable {
       return;
     }
 
-    if (column.order) {
-      this.sort(column.id, this.inverse[column.order]);
-    }
-    else {
-      this.sort(column.id, 'asc');
-    }
+    this.setArrowAndSortOrder(column);
+    this.sort(column.id, this.sorted.order);
   }
 
   initEventListener() {
-    this.subElements.header.addEventListener('click', this.handleClick);
+    this.subElements.header.addEventListener('pointerdown', this.handleClick);
     window.addEventListener('scroll', this.handleScroll);
   }
 

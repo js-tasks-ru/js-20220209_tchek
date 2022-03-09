@@ -21,7 +21,7 @@ class Tooltip {
 
     this.render(toolTip);
     this.element.toolTipElement = event.target.closest('div[data-tooltip]');
-    this.element.toolTipElement.addEventListener('mousemove', this.mouseMove);
+    this.element.toolTipElement.addEventListener('pointermove', this.mouseMove);
   }
 
   mouseMove = (e) => {
@@ -32,7 +32,7 @@ class Tooltip {
 
   pointerOut = (event) => {
     if (this.element) {
-      this.element.toolTipElement.removeEventListener('mousemove', this.mouseMove);
+      this.element.toolTipElement.removeEventListener('pointermove', this.mouseMove);
       this.element.remove();
     }
     this.element = null;
@@ -41,8 +41,8 @@ class Tooltip {
   destroy() {
     document.removeEventListener('pointerover', this.pointerOver);
     document.removeEventListener('pointerover', this.pointerOut);
-    if (this.element) {
-      this.element.toolTipElement.removeEventListener('mousemove', this.mouseMove);
+    if (this.element && this.element.toolTipElement) {
+      this.element.toolTipElement.removeEventListener('pointermove', this.mouseMove);
     }
     this.element = null;
     Tooltip._component = null;
