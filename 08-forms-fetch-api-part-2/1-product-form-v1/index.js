@@ -42,10 +42,9 @@ export default class ProductForm {
   }
 
   getSubcategories(categories) {
-    const rrr = categories.map(category => {
+    return categories.map(category => {
       return this.getSubcategoriesInner(category.title, category.subcategories);
     }).join('');
-    return rrr;
   }
 
   getSubcategoriesInner(categoryName, subcategories) {
